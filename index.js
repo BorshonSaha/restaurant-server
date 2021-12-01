@@ -42,7 +42,74 @@ client.connect(err => {
             console.log('deleted Successfully');
         })
     })
+
+
+    app.patch('/update/:id', (req, res) => {
+        foodCollection.updateOne({_id: objectId(req.params.id)},
+        {
+            $set: {name: req.body.updateName, price: req.body.updatePrice}
+        })
+    })
+
+
 });
+
+
+
+client.connect(err => {
+    const adminCollection = client.db("restaurant-management").collection("adminList");
+
+    app.post('/makeAdmin', (req, res) => {
+        const newAdmin = req.body;
+        adminCollection.insertOne(newAdmin)
+            .then(result => {
+                console.log('admin added');
+            })
+    })
+
+    app.get('/getAdmin', (req, res) => {
+        adminCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    })
+
+    app.delete('/deleteAdmin/:id', (req, res) => {
+        adminCollection.deleteOne({_id: objectId(req.params.id)})
+        .then(result => {
+            console.log('admin deleted Successfully');
+        })
+    })
+
+});
+
+
+client.connect(err => {
+    const staffCollection = client.db("restaurant-management").collection("staffList");
+
+    app.post('/addStaff', (req, res) => {
+        const newStaff = req.body;
+        staffCollection.insertOne(newStaff)
+            .then(result => {
+                console.log('staff added');
+            })
+    })
+
+    app.get('/getStaff', (req, res) => {
+        staffCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    })
+
+    app.delete('/deleteStaff/:id', (req, res) => {
+        staffCollection.deleteOne({_id: objectId(req.params.id)})
+        .then(result => {
+            console.log('staff deleted Successfully');
+        })
+    })
+})
+
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
