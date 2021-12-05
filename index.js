@@ -111,6 +111,41 @@ client.connect(err => {
 })
 
 
+client.connect(err => {
+    const orderCollection = client.db("restaurant-management").collection("orderList");
+
+    app.post('/order', (req, res) => {
+        const newOrder = req.body;
+        orderCollection.insertOne(newOrder)
+            .then(result => {
+                console.log('order added');
+            })
+    })
+
+    app.get('/getOrder', (req, res) => {
+        orderCollection.find({ email: req.query.email })
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    })
+
+    app.get('/getAllOrder', (req, res) => {
+        orderCollection.find({ status: req.query.status })
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    })
+
+    app.patch('/updateStatus/:id', (req, res) => {
+        orderCollection.updateOne({_id: objectId(req.params.id)},
+        {
+            $set: {status: req.body.newStatus}
+        })
+    })
+
+})
+
+
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
