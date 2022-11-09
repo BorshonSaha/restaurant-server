@@ -81,6 +81,13 @@ client.connect(err => {
         })
     })
 
+    app.patch('/updateAdmin/:id', (req, res) => {
+        adminCollection.updateOne({_id: objectId(req.params.id)},
+        {
+            $set: {name: req.body.updateName, email: req.body.updateEmail, number: req.body.updateNumber, address: req.body.updateAddress}
+        })
+    })
+
 });
 
 
@@ -106,6 +113,13 @@ client.connect(err => {
         staffCollection.deleteOne({_id: objectId(req.params.id)})
         .then(result => {
             console.log('staff deleted Successfully');
+        })
+    })
+
+    app.patch('/updateStaff/:id', (req, res) => {
+        staffCollection.updateOne({_id: objectId(req.params.id)},
+        {
+            $set: {name: req.body.updateName, address: req.body.updateAddress, number: req.body.updateNumber, salary: req.body.updateSalary}
         })
     })
 })
@@ -141,6 +155,13 @@ client.connect(err => {
         {
             $set: {status: req.body.newStatus}
         })
+    })
+
+    app.get('/getPaymentInfo', (req, res) => {
+        orderCollection.find({ })
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
     })
 
 })
